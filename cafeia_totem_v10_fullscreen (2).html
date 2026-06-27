@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>cafeIA — Tótem</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init("Bho4NxSfxRUvcZYHO");</script>
+<style>
+  :root{--cafe:#6F4E37;--crema:#EDE0C8;--choco:#3D2B1F;--tost:#C47D2E;--lt:rgba(111,78,55,0.08);--md:rgba(111,78,55,0.16);--bd:rgba(111,78,55,0.20);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;font-family:Arial,sans-serif;overflow:hidden;}
+  body{background:var(--crema);}
+  .screen{width:100%;height:100vh;background:var(--crema);display:flex;flex-direction:column;overflow:hidden;}
+  .step{display:none;flex-direction:column;flex:1;height:100vh;overflow:hidden;}
+  .step.active{display:flex;}
+  .lang-bar{display:flex;justify-content:flex-end;padding:12px 18px 0;gap:8px;background:var(--crema);flex-shrink:0;}
+  .lang-btn{background:transparent;border:0.5px solid var(--bd);border-radius:8px;padding:5px 14px;font-size:13px;font-family:'Poppins',sans-serif;font-weight:500;color:var(--cafe);cursor:pointer;}
+  .lang-btn.active{background:var(--cafe);color:var(--crema);border-color:var(--cafe);}
+  .welcome{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--crema);overflow:hidden;}
+  .logo-header{width:100%;background:var(--crema);display:flex;flex-direction:column;align-items:center;padding:16px 32px 0;flex-shrink:0;}
+  .logo-header img{width:200px;height:200px;object-fit:contain;display:block;opacity:0;transition:opacity .3s;}
+  .logo-tagline{font-family:'Poppins',sans-serif;font-size:12px;color:var(--cafe);opacity:.55;margin-top:4px;letter-spacing:.12em;text-transform:uppercase;}
+  .welcome-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 36px 24px;gap:13px;text-align:center;background:var(--crema);}
+  .divider{width:50px;height:1px;background:var(--bd);}
+  .pulse-dot{width:10px;height:10px;background:var(--tost);border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(0.65)}}
+  .welcome-greeting{font-family:'Poppins',sans-serif;font-size:26px;font-weight:600;color:var(--choco);}
+  .welcome-sub{font-size:15px;color:var(--cafe);opacity:.72;line-height:1.6;max-width:380px;}
+  .access-grid{display:flex;flex-direction:column;gap:12px;width:100%;max-width:420px;}
+  .access-btn{width:100%;border-radius:16px;padding:18px 20px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;transition:all .15s;display:flex;align-items:center;gap:14px;border:none;}
+  .access-btn.primary{background:var(--cafe);color:var(--crema);}
+  .access-btn.primary:hover{opacity:.88;}
+  .access-btn.secondary-btn{background:var(--lt);color:var(--choco);border:0.5px solid var(--bd);}
+  .access-btn.secondary-btn:hover{background:var(--md);}
+  .access-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .access-btn.primary .access-icon{background:rgba(255,255,255,0.15);}
+  .access-btn.secondary-btn .access-icon{background:rgba(111,78,55,0.12);}
+  .access-info{flex:1;}
+  .access-title{font-size:15px;font-weight:600;line-height:1.2;}
+  .access-sub{font-size:12px;opacity:.65;font-weight:400;margin-top:2px;}
+  .mini-header{background:var(--cafe);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  .mini-logo-wrap{display:flex;align-items:center;gap:10px;}
+  .mini-logo-img{width:30px;height:30px;object-fit:contain;background:var(--crema);border-radius:5px;}
+  .mini-logo{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;color:var(--crema);}
+  .mini-right{display:flex;align-items:center;gap:12px;}
+  .mini-lang{font-size:12px;color:rgba(245,235,220,0.6);font-family:'Poppins',sans-serif;cursor:pointer;border:0.5px solid rgba(245,235,220,0.3);border-radius:6px;padding:4px 11px;background:transparent;}
+  .back-btn{background:none;border:none;color:rgba(237,224,200,0.7);cursor:pointer;font-size:14px;font-family:Arial,sans-serif;padding:0;}
+  .mini-step{font-size:12px;color:rgba(237,224,200,0.55);}
+  .inner{padding:20px 28px;display:flex;flex-direction:column;gap:14px;flex:1;background:var(--crema);overflow-y:auto;}
+  .inner::-webkit-scrollbar{width:4px;}
+  .inner::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+  .section-label{font-size:12px;color:var(--cafe);opacity:.6;text-transform:uppercase;letter-spacing:.08em;}
+  .question-text{font-family:'Poppins',sans-serif;font-size:18px;color:var(--choco);font-weight:600;line-height:1.4;}
+  .user-welcome{background:var(--md);border:0.5px solid var(--cafe);border-radius:16px;padding:15px 18px;display:flex;align-items:center;gap:14px;}
+  .user-avatar{width:46px;height:46px;border-radius:50%;background:var(--cafe);display:flex;align-items:center;justify-content:center;color:var(--crema);font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;}
+  .user-name-t{font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;color:var(--choco);}
+  .user-sub-t{font-size:12px;color:var(--cafe);opacity:.7;margin-top:2px;}
+  .user-pref{background:var(--lt);border:0.5px solid var(--bd);border-radius:13px;padding:12px 16px;}
+  .user-pref-label{font-size:12px;color:var(--cafe);opacity:.6;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+  .user-pref-item{font-size:13px;color:var(--choco);display:flex;align-items:center;gap:8px;padding:3px 0;}
+  .field-label{font-size:13px;color:var(--cafe);font-weight:500;margin-bottom:4px;}
+  .fake-input{background:white;border:0.5px solid var(--bd);border-radius:10px;padding:13px 16px;font-size:14px;color:var(--choco);display:flex;align-items:center;justify-content:space-between;}
+  .real-input{background:white;border:0.5px solid var(--bd);border-radius:10px;padding:13px 16px;font-size:14px;color:var(--choco);width:100%;outline:none;font-family:Arial,sans-serif;}
+  .real-input:focus{border-color:var(--cafe);}
+  .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .mode-btn{background:var(--lt);border:0.5px solid var(--bd);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;color:var(--choco);font-size:14px;font-family:'Poppins',sans-serif;font-weight:500;transition:all .15s;}
+  .mode-btn:hover{background:var(--md);border-color:var(--cafe);}
+  .mode-icon{font-size:28px;margin-bottom:6px;display:block;color:var(--cafe);}
+  .combo-card{background:var(--lt);border:0.5px solid var(--bd);border-radius:14px;padding:15px 18px;cursor:pointer;transition:all .15s;}
+  .combo-card.selected{background:var(--md);border-color:var(--cafe);}
+  .combo-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+  .combo-left{display:flex;align-items:flex-start;gap:12px;flex:1;}
+  .combo-icon-wrap{width:42px;height:42px;background:rgba(111,78,55,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .combo-name{font-size:15px;font-weight:600;color:var(--choco);font-family:'Poppins',sans-serif;line-height:1.3;}
+  .combo-moment{font-size:11px;padding:2px 10px;border-radius:20px;font-family:'Poppins',sans-serif;font-weight:500;white-space:nowrap;display:inline-block;margin-top:3px;}
+  .badge-morning{background:rgba(255,190,50,0.18);color:#7a5500;}
+  .badge-afternoon{background:rgba(111,78,55,0.14);color:var(--cafe);}
+  .badge-siesta{background:rgba(100,120,180,0.13);color:#3a4a8a;}
+  .combo-price-block{text-align:right;flex-shrink:0;}
+  .combo-price{font-size:20px;font-weight:700;color:var(--cafe);font-family:'Poppins',sans-serif;display:block;line-height:1;}
+  .combo-price-label{font-size:11px;color:var(--cafe);opacity:.6;margin-top:2px;}
+  .combo-desc{font-size:13px;color:var(--cafe);opacity:.75;line-height:1.4;}
+  .budget-display{text-align:center;padding:8px 0 4px;}
+  .budget-amount{font-family:'Poppins',sans-serif;font-size:38px;font-weight:700;color:var(--cafe);}
+  .budget-label{font-size:13px;color:var(--cafe);opacity:.55;margin-top:2px;}
+  input[type=range]{width:100%;accent-color:var(--cafe);cursor:pointer;height:6px;}
+  .range-limits{display:flex;justify-content:space-between;font-size:12px;color:var(--cafe);opacity:.45;margin-top:4px;}
+  .pref-btn{background:var(--lt);border:0.5px solid var(--bd);border-radius:12px;padding:11px 10px;text-align:center;cursor:pointer;font-size:13px;color:var(--choco);font-family:Arial,sans-serif;transition:all .15s;}
+  .pref-btn.active{background:var(--md);border-color:var(--cafe);font-weight:600;color:var(--cafe);}
+  .ia-combo-card{background:var(--md);border:2px solid var(--cafe);border-radius:16px;padding:18px 20px;}
+  .ia-badge{display:inline-flex;align-items:center;gap:5px;background:var(--cafe);color:var(--crema);font-size:11px;padding:4px 13px;border-radius:20px;margin-bottom:10px;font-family:'Poppins',sans-serif;font-weight:600;}
+  .ia-combo-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--choco);margin-bottom:10px;}
+  .ia-items{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .ia-item{display:flex;align-items:center;justify-content:space-between;font-size:14px;color:var(--choco);}
+  .ia-item-left{display:flex;align-items:center;gap:8px;}
+  .ia-item-icon{font-size:18px;}
+  .ia-item-price{font-size:14px;font-weight:600;color:var(--cafe);font-family:'Poppins',sans-serif;}
+  .ia-divider{border:none;border-top:0.5px solid var(--bd);margin:8px 0;}
+  .ia-total-row{display:flex;justify-content:space-between;align-items:center;}
+  .ia-total-label{font-size:14px;font-weight:600;color:var(--choco);font-family:'Poppins',sans-serif;}
+  .ia-total-price{font-size:22px;font-weight:700;color:var(--cafe);font-family:'Poppins',sans-serif;}
+  .ia-vuelto{font-size:12px;color:var(--cafe);opacity:.7;margin-top:4px;}
+  .ia-razon{background:rgba(196,125,46,0.09);border:0.5px solid rgba(196,125,46,0.28);border-radius:0 12px 12px 12px;padding:11px 14px;font-size:13px;color:var(--choco);line-height:1.6;}
+  .ia-razon-label{font-size:11px;color:var(--tost);font-weight:600;margin-bottom:3px;font-family:'Poppins',sans-serif;}
+  .alts-title{font-size:12px;color:var(--cafe);opacity:.6;text-transform:uppercase;letter-spacing:.06em;}
+  .alt-card{background:var(--lt);border:0.5px solid var(--bd);border-radius:12px;padding:11px 14px;cursor:pointer;transition:all .15s;margin-bottom:8px;}
+  .alt-card:hover{background:var(--md);border-color:var(--cafe);}
+  .alt-top{display:flex;justify-content:space-between;align-items:center;}
+  .alt-name{font-size:13px;font-weight:500;color:var(--choco);font-family:'Poppins',sans-serif;}
+  .alt-price{font-size:15px;font-weight:700;color:var(--cafe);font-family:'Poppins',sans-serif;}
+  .alt-items{font-size:12px;color:var(--cafe);opacity:.65;margin-top:3px;}
+  .scroll-area{overflow-y:auto;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .scroll-area::-webkit-scrollbar{width:4px;}
+  .scroll-area::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+  .check-circle{width:70px;height:70px;background:var(--lt);border:2px solid var(--cafe);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--cafe);font-size:30px;margin:0 auto 8px;}
+  .order-num{font-size:13px;color:var(--cafe);opacity:.5;letter-spacing:.08em;text-transform:uppercase;text-align:center;}
+  .confirm-card{background:var(--lt);border:0.5px solid var(--bd);border-radius:14px;padding:15px 18px;width:100%;}
+  .confirm-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--cafe);padding:6px 0;border-bottom:0.5px solid var(--bd);}
+  .confirm-row:last-child{border-bottom:none;}
+  .confirm-row.total{color:var(--choco);font-weight:700;font-family:'Poppins',sans-serif;font-size:17px;padding-top:10px;}
+  .confirm-price{font-size:16px;font-weight:700;color:var(--cafe);font-family:'Poppins',sans-serif;}
+  .confirm-price.total-price{font-size:20px;color:var(--choco);}
+  .learn-badge{background:rgba(196,125,46,0.09);border:0.5px solid rgba(196,125,46,0.25);border-radius:12px;padding:11px 14px;font-size:13px;color:var(--cafe);display:flex;align-items:center;gap:7px;justify-content:center;}
+  .email-badge{background:rgba(111,78,55,0.06);border:0.5px solid rgba(111,78,55,0.2);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--cafe);display:flex;align-items:center;gap:7px;justify-content:center;}
+  .app-promo{background:var(--choco);border-radius:14px;padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
+  .app-promo-title{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:var(--crema);}
+  .app-promo-sub{font-size:12px;color:rgba(237,224,200,0.65);line-height:1.5;}
+  .app-promo-feats{display:flex;flex-direction:column;gap:6px;}
+  .app-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(237,224,200,0.8);}
+  .app-feat i{color:var(--tost);font-size:15px;}
+  .app-download-btn{background:var(--tost);color:white;border:none;border-radius:12px;padding:13px 18px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;}
+  .cta-btn{background:var(--cafe);color:var(--crema);border:none;border-radius:14px;padding:16px;font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;width:100%;cursor:pointer;transition:opacity .15s;flex-shrink:0;}
+  .cta-btn:hover{opacity:.85;}
+  .cta-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .cta-btn.sec{background:var(--lt);color:var(--cafe);font-size:13px;padding:12px;border:0.5px solid var(--bd);font-weight:400;font-family:Arial,sans-serif;}
+  .progress-dots{display:flex;justify-content:center;gap:7px;padding:10px 0 6px;background:var(--crema);flex-shrink:0;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--md);transition:all .2s;}
+  .dot.active{background:var(--cafe);width:22px;border-radius:4px;}
+  .ia-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;flex:1;}
+  .ia-loading-dots{display:flex;gap:10px;}
+  .ia-loading-dots span{width:14px;height:14px;border-radius:50%;background:var(--cafe);animation:blink 1.2s infinite;}
+  .ia-loading-dots span:nth-child(2){animation-delay:.2s;}
+  .ia-loading-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+  .ia-loading-text{font-size:16px;color:var(--cafe);font-family:'Poppins',sans-serif;text-align:center;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--choco);color:var(--crema);padding:12px 24px;border-radius:12px;font-size:13px;font-family:'Poppins',sans-serif;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="screen">
+
+  <!-- S0 BIENVENIDA -->
+  <div id="s0" class="step active">
+    <div class="welcome">
+      <div class="lang-bar">
+        <button class="lang-btn active" id="lb-es" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" id="lb-en" onclick="setLang('en')">EN</button>
+      </div>
+      <div class="logo-header">
+        <img id="logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="Logo cafeIA" crossorigin="anonymous" onload="matchBg(this)">
+        <div class="logo-tagline">Inteligencia en cada sorbo</div>
+      </div>
+      <div class="welcome-body">
+        <div class="divider"></div>
+        <div class="pulse-dot"></div>
+        <div class="welcome-greeting">¡Bienvenido/a!</div>
+        <div class="welcome-sub">Registrate para una experiencia personalizada, o pedí como invitado.</div>
+        <div class="access-grid">
+          <button class="access-btn primary" onclick="go(1)">
+            <div class="access-icon"><i class="ti ti-user-plus" style="font-size:20px"></i></div>
+            <div class="access-info"><div class="access-title">Registrarme</div><div class="access-sub">Crear mi cuenta cafeIA</div></div>
+            <i class="ti ti-chevron-right" style="font-size:17px;opacity:.6"></i>
+          </button>
+          <button class="access-btn secondary-btn" onclick="go(3)">
+            <div class="access-icon"><i class="ti ti-layout-grid" style="font-size:20px;color:var(--cafe)"></i></div>
+            <div class="access-info"><div class="access-title">Pedir como invitado</div><div class="access-sub">Sin cuenta, sin registro</div></div>
+            <i class="ti ti-chevron-right" style="font-size:17px;opacity:.4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1 REGISTRO -->
+  <div id="s1" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="go(0)"><i class="ti ti-arrow-left"></i> Inicio</button></div>
+    </div>
+    <div class="inner">
+      <div><div class="section-label">Nueva cuenta</div><div class="question-text">Completá tus datos</div></div>
+      <div>
+        <div class="field-label">Tu nombre</div>
+        <input class="real-input" id="reg-nombre" type="text" placeholder="Ej: Valentina">
+      </div>
+      <div>
+        <div class="field-label">Tu correo electrónico</div>
+        <input class="real-input" id="reg-email" type="email" placeholder="tu@correo.com">
+      </div>
+      <div style="background:rgba(196,125,46,0.09);border:0.5px solid rgba(196,125,46,0.28);border-radius:0 12px 12px 12px;padding:12px 15px;font-size:13px;color:var(--choco);line-height:1.6;">
+        <div style="font-size:11px;color:var(--tost);font-weight:600;margin-bottom:4px;font-family:'Poppins',sans-serif;"><i class="ti ti-mail"></i> Correo de bienvenida</div>
+        Al registrarte recibirás un correo de bienvenida en tu casilla.
+      </div>
+      <button class="cta-btn" id="btn-registro" onclick="registrar()"><i class="ti ti-user-check"></i> Crear mi cuenta</button>
+      <button class="cta-btn sec" onclick="go(0)">Volver</button>
+    </div>
+  </div>
+
+  <!-- S2 PERFIL -->
+  <div id="s2" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="go(0)"><i class="ti ti-logout"></i> Salir</button></div>
+    </div>
+    <div class="inner">
+      <div class="user-welcome">
+        <div class="user-avatar" id="perfil-avatar">VA</div>
+        <div><div class="user-name-t" id="perfil-nombre">Valentina</div><div class="user-sub-t" id="perfil-email">valentina@cafeia.py</div></div>
+      </div>
+      <div class="user-pref">
+        <div class="user-pref-label"><i class="ti ti-brain" style="font-size:14px;color:var(--tost)"></i> cafeIA ya te conoce</div>
+        <div class="user-pref-item"><i class="ti ti-heart" style="font-size:14px;color:var(--cafe)"></i> Favorito: Cappuccino</div>
+        <div class="user-pref-item"><i class="ti ti-clock" style="font-size:14px;color:var(--cafe)"></i> Horario habitual: mañana</div>
+        <div class="user-pref-item"><i class="ti ti-coin" style="font-size:14px;color:var(--cafe)"></i> Presupuesto usual: Gs. 45.000</div>
+      </div>
+      <div class="question-text">¿Cómo querés pedir hoy?</div>
+      <div class="mode-grid">
+        <div class="mode-btn" onclick="go(4)"><span class="mode-icon"><i class="ti ti-layout-grid"></i></span>Elegir combo</div>
+        <div class="mode-btn" onclick="go(6)"><span class="mode-icon"><i class="ti ti-sparkles"></i></span>IA arma mi pedido</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 INVITADO -->
+  <div id="s3" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="go(0)"><i class="ti ti-arrow-left"></i> Inicio</button></div>
+    </div>
+    <div class="inner">
+      <div><div class="section-label">Modo invitado</div><div class="question-text">¿Cómo querés pedir?</div></div>
+      <div class="mode-grid">
+        <div class="mode-btn" onclick="go(4)"><span class="mode-icon"><i class="ti ti-layout-grid"></i></span>Elegir combo</div>
+        <div class="mode-btn" onclick="go(6)"><span class="mode-icon"><i class="ti ti-sparkles"></i></span>IA arma mi pedido</div>
+      </div>
+      <div style="background:rgba(196,125,46,0.09);border:0.5px solid rgba(196,125,46,0.28);border-radius:0 12px 12px 12px;padding:12px 15px;font-size:14px;color:var(--choco);line-height:1.6;">
+        <div style="font-size:12px;color:var(--tost);font-weight:600;margin-bottom:4px;font-family:'Poppins',sans-serif;"><i class="ti ti-sparkles"></i> Tip</div>
+        Registrate y la IA aprende tus gustos para mejorar con cada visita.
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 COMBOS -->
+  <div id="s4" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i> Atrás</button></div>
+    </div>
+    <div class="inner">
+      <div><div class="section-label">Nuestros combos</div><div class="question-text">Elegí tu combo</div></div>
+      <div class="scroll-area" id="combos-lista"></div>
+      <button class="cta-btn" onclick="confirmarCombo()">Confirmar pedido</button>
+    </div>
+    <div class="progress-dots"><div class="dot active"></div><div class="dot"></div></div>
+  </div>
+
+  <!-- S5 CONFIRMACIÓN COMBO -->
+  <div id="s5" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-step">Confirmado</div>
+    </div>
+    <div class="inner" style="justify-content:center;gap:14px;">
+      <div class="check-circle"><i class="ti ti-check"></i></div>
+      <div class="question-text" style="text-align:center;">¡Pedido confirmado!</div>
+      <div class="order-num" id="order-num-combo">Orden #4821 · listo en ~5 min</div>
+      <div class="confirm-card" id="confirm-combo-card"></div>
+      <div class="learn-badge"><i class="ti ti-brain" style="font-size:16px;color:var(--tost)"></i> cafeIA aprendió tus preferencias</div>
+      <div class="email-badge" id="email-badge-combo" style="display:none;"><i class="ti ti-mail" style="font-size:15px;color:var(--tost)"></i> <span id="email-badge-combo-text">Confirmación enviada a tu correo</span></div>
+      <div id="app-promo-combo"></div>
+      <button class="cta-btn" onclick="go(0)">Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- S6 PRESUPUESTO IA -->
+  <div id="s6" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i> Atrás</button></div>
+    </div>
+    <div class="inner">
+      <div><div class="section-label">Paso 1 de 2 — IA personalizada</div><div class="question-text">¿Cuánto querés gastar?</div></div>
+      <div class="budget-display">
+        <div class="budget-amount" id="bdisplay">Gs. 40.000</div>
+        <div class="budget-label">tu presupuesto</div>
+      </div>
+      <div>
+        <input type="range" id="budget-slider" min="15" max="65" value="40" step="1" oninput="updateBudget(this.value)">
+        <div class="range-limits"><span>Gs. 15.000</span><span>Gs. 65.000</span></div>
+      </div>
+      <div style="font-size:14px;font-weight:600;color:var(--choco);font-family:'Poppins',sans-serif;">¿Qué preferís tomar?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="pref-btn active" onclick="togglePref(this,'cafeine')" data-pref="cafeine">☕ Con cafeína</div>
+        <div class="pref-btn" onclick="togglePref(this,'nocafeine')" data-pref="nocafeine">🌿 Sin cafeína</div>
+        <div class="pref-btn active" onclick="togglePref(this,'cold')" data-pref="cold">🧊 Frío</div>
+        <div class="pref-btn active" onclick="togglePref(this,'hot')" data-pref="hot">🔥 Caliente</div>
+        <div class="pref-btn active" onclick="togglePref(this,'food')" data-pref="food">🥐 Con algo sólido</div>
+        <div class="pref-btn" onclick="togglePref(this,'onlydrink')" data-pref="onlydrink">☕ Solo bebida</div>
+      </div>
+      <button class="cta-btn" onclick="goIA()"><i class="ti ti-sparkles"></i> Que la IA arme mi pedido</button>
+      <button class="cta-btn sec" onclick="goBack()">Volver</button>
+    </div>
+    <div class="progress-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+
+  <!-- S7 LOADING -->
+  <div id="s7" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-step">Procesando...</div>
+    </div>
+    <div class="ia-loading">
+      <div class="ia-loading-dots"><span></span><span></span><span></span></div>
+      <div class="ia-loading-text" id="loading-text">La IA está armando tu combinación perfecta...</div>
+    </div>
+  </div>
+
+  <!-- S8 RESULTADO IA -->
+  <div id="s8" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-right"><button class="back-btn" onclick="go(6)"><i class="ti ti-arrow-left"></i> Atrás</button></div>
+    </div>
+    <div class="inner">
+      <div><div class="section-label">Paso 2 de 2 — Tu combo personalizado</div><div class="question-text">La IA armó esto para vos</div></div>
+      <div class="scroll-area">
+        <div class="ia-combo-card" id="ia-result"></div>
+        <div class="ia-razon" id="ia-razon"></div>
+        <div class="alts-title" style="margin-top:4px;">También podés elegir</div>
+        <div id="ia-alts"></div>
+      </div>
+      <button class="cta-btn" onclick="confirmarIA()"><i class="ti ti-check"></i> Confirmar este pedido</button>
+      <button class="cta-btn sec" onclick="go(6)">Cambiar preferencias</button>
+    </div>
+    <div class="progress-dots"><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
+  </div>
+
+  <!-- S9 CONFIRMACIÓN IA -->
+  <div id="s9" class="step">
+    <div class="mini-header">
+      <div class="mini-logo-wrap"><img class="mini-logo-img" src="https://i.postimg.cc/CL9MgQv6/Logo-Cafeia-01.jpg" alt="cafeIA"><div class="mini-logo">cafeIA</div></div>
+      <div class="mini-step">Confirmado</div>
+    </div>
+    <div class="inner" style="justify-content:center;gap:14px;">
+      <div class="check-circle"><i class="ti ti-check"></i></div>
+      <div class="question-text" style="text-align:center;">¡Pedido confirmado!</div>
+      <div class="order-num">Orden #4822 · listo en ~5 min</div>
+      <div class="confirm-card" id="ia-confirm-card"></div>
+      <div class="learn-badge"><i class="ti ti-brain" style="font-size:16px;color:var(--tost)"></i> cafeIA aprendió tus preferencias para la próxima vez</div>
+      <div class="email-badge" id="email-badge-ia" style="display:none;"><i class="ti ti-mail" style="font-size:15px;color:var(--tost)"></i> <span id="email-badge-ia-text">Confirmación enviada a tu correo</span></div>
+      <div id="app-promo-ia"></div>
+      <button class="cta-btn" onclick="go(0)">Volver al inicio</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── EMAILJS CONFIG ──────────────────────────────────────────
+const EJS = {
+  serviceId:  'service_cafeia',
+  tplBienvenida: 'template_7t9qvaf',
+  tplPedido:     'template_zoagsgp',
+};
+
+function sendBienvenida(nombre, email) {
+  emailjs.send(EJS.serviceId, EJS.tplBienvenida, {
+    nombre:   nombre,
+    name:     nombre,
+    to_email: email,
+  }).then(()=>showToast('✉️ Correo de bienvenida enviado a '+email))
+    .catch((err)=>showToast('⚠️ No se pudo enviar el correo: '+JSON.stringify(err)));
+}
+
+function sendPedido(nombre, email, combo, desc, precio) {
+  emailjs.send(EJS.serviceId, EJS.tplPedido, {
+    nombre:   nombre,
+    name:     nombre,
+    to_email: email,
+    combo:    combo,
+    desc:     desc,
+    precio:   precio,
+  }).then(()=>showToast('✉️ Confirmación enviada a '+email))
+    .catch((err)=>showToast('⚠️ No se pudo enviar el correo: '+JSON.stringify(err)));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ── DATOS ───────────────────────────────────────────────────
+const COMBOS_FIJOS=[
+  {name:'Combo Despertar',desc:'Café espresso o americano + medialuna',   price:35000,icon:'ti-coffee', moment:'morning'},
+  {name:'Combo Activo',   desc:'Cappuccino o latte + croissant',          price:45000,icon:'ti-cup',    moment:'morning'},
+  {name:'Combo Power',    desc:'Latte grande + muffin + jugo natural',    price:55000,icon:'ti-bolt',   moment:'morning'},
+  {name:'Combo Break',    desc:'Café a elección + cookie',                price:40000,icon:'ti-cookie', moment:'afternoon'},
+  {name:'Combo Sweet',    desc:'Cappuccino o latte + panificado dulce',   price:50000,icon:'ti-heart',  moment:'afternoon'},
+  {name:'Combo Relax',    desc:'Bebida caliente + panificado + infusión', price:55000,icon:'ti-leaf',   moment:'afternoon'},
+  {name:'Combo Reactivá', desc:'Café frío o latte + snack energético',    price:45000,icon:'ti-bolt',   moment:'siesta'},
+];
+const BEBIDAS=[
+  {name:'Espresso',           price:12000,tags:['cafeine','hot'],  icon:'☕'},
+  {name:'Americano',          price:13000,tags:['cafeine','hot'],  icon:'☕'},
+  {name:'Cappuccino',         price:15000,tags:['cafeine','hot'],  icon:'☕'},
+  {name:'Latte',              price:16000,tags:['cafeine','hot'],  icon:'☕'},
+  {name:'Latte grande',       price:20000,tags:['cafeine','hot'],  icon:'☕'},
+  {name:'Café frío',          price:17000,tags:['cafeine','cold'], icon:'🧊'},
+  {name:'Cold brew',          price:18000,tags:['cafeine','cold'], icon:'🧊'},
+  {name:'Infusión',           price:10000,tags:['nocafeine','hot'],icon:'🌿'},
+  {name:'Chocolate caliente', price:14000,tags:['nocafeine','hot'],icon:'🍫'},
+  {name:'Jugo natural',       price:13000,tags:['nocafeine','cold'],icon:'🍊'},
+];
+const SOLIDOS=[
+  {name:'Medialuna',        price:8000, icon:'🥐'},
+  {name:'Croissant',        price:12000,icon:'🥐'},
+  {name:'Muffin',           price:10000,icon:'🧁'},
+  {name:'Cookie',           price:9000, icon:'🍪'},
+  {name:'Panificado dulce', price:10000,icon:'🍞'},
+  {name:'Snack energético', price:11000,icon:'🍫'},
+  {name:'Tostado',          price:13000,icon:'🍞'},
+  {name:'Budín',            price:12000,icon:'🍰'},
+];
+const BADGE={morning:'☀️ Mañana',afternoon:'☕ Tarde',siesta:'💤 Siesta'};
+const BCLS={morning:'badge-morning',afternoon:'badge-afternoon',siesta:'badge-siesta'};
+
+let comboSel=COMBOS_FIJOS[0], presupuesto=40000, esInvitado=true;
+let iaResult=null, iaAlts=[];
+let prefs=new Set(['cafeine','cold','hot','food']);
+let usuarioNombre='', usuarioEmail='';
+let ordenCount = Math.floor(Math.random()*9000)+1000;
+
+function fmt(n){return 'Gs. '+n.toLocaleString('es-PY');}
+
+function matchBg(img){
+  try{
+    const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
+    const ctx=c.getContext('2d');ctx.drawImage(img,0,0);
+    const pts=[ctx.getImageData(5,5,1,1).data,ctx.getImageData(img.naturalWidth-5,5,1,1).data,
+               ctx.getImageData(5,img.naturalHeight-5,1,1).data,ctx.getImageData(img.naturalWidth-5,img.naturalHeight-5,1,1).data];
+    const r=Math.round(pts.reduce((a,p)=>a+p[0],0)/4),g=Math.round(pts.reduce((a,p)=>a+p[1],0)/4),b=Math.round(pts.reduce((a,p)=>a+p[2],0)/4);
+    const hex='#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+    document.documentElement.style.setProperty('--crema',hex);
+    document.querySelectorAll('.screen,.welcome,.logo-header,.welcome-body,.inner,.progress-dots,.lang-bar').forEach(el=>el.style.background=hex);
+  }catch(e){}
+  img.style.opacity='1';
+}
+
+// ── REGISTRO ────────────────────────────────────────────────
+function registrar(){
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  if(!nombre){ showToast('⚠️ Ingresá tu nombre'); return; }
+  if(!email || !email.includes('@')){ showToast('⚠️ Ingresá un correo válido'); return; }
+  usuarioNombre = nombre;
+  usuarioEmail  = email;
+  esInvitado = false;
+  // Actualizar perfil
+  document.getElementById('perfil-nombre').textContent = nombre;
+  document.getElementById('perfil-email').textContent  = email;
+  document.getElementById('perfil-avatar').textContent = nombre.substring(0,2).toUpperCase();
+  // Enviar correo de bienvenida
+  sendBienvenida(nombre, email);
+  go(2);
+}
+
+// ── COMBOS ──────────────────────────────────────────────────
+function renderCombos(){
+  const lista=document.getElementById('combos-lista');lista.innerHTML='';
+  COMBOS_FIJOS.forEach((c,i)=>{
+    const div=document.createElement('div');div.className='combo-card'+(i===0?' selected':'');
+    div.innerHTML=`<div class="combo-top-row"><div class="combo-left"><div class="combo-icon-wrap"><i class="ti ${c.icon}" style="font-size:18px;color:var(--cafe)"></i></div><div><div class="combo-name">${c.name}</div><span class="combo-moment ${BCLS[c.moment]}">${BADGE[c.moment]}</span></div></div><div class="combo-price-block"><span class="combo-price">${fmt(c.price)}</span><div class="combo-price-label">por combo</div></div></div><div class="combo-desc">${c.desc}</div>`;
+    div.onclick=()=>{document.querySelectorAll('.combo-card').forEach(x=>x.classList.remove('selected'));div.classList.add('selected');comboSel=c;};
+    lista.appendChild(div);
+  });comboSel=COMBOS_FIJOS[0];
+}
+
+function confirmarCombo(){
+  ordenCount++;
+  const card = document.getElementById('confirm-combo-card');
+  card.innerHTML=`<div class="confirm-row"><span style="font-weight:500;color:var(--choco);">${comboSel.name}</span><span class="confirm-price">${fmt(comboSel.price)}</span></div><div class="confirm-row"><span style="font-size:12px;opacity:.7;color:var(--cafe);">${comboSel.desc}</span></div><div class="confirm-row total"><span>Total</span><span class="confirm-price total-price">${fmt(comboSel.price)}</span></div>`;
+  document.getElementById('order-num-combo').textContent=`Orden #${ordenCount} · listo en ~5 min`;
+  // Correo si tiene cuenta
+  if(!esInvitado && usuarioEmail){
+    sendPedido(usuarioNombre, usuarioEmail, comboSel.name, comboSel.desc, fmt(comboSel.price));
+    document.getElementById('email-badge-combo').style.display='flex';
+    document.getElementById('email-badge-combo-text').textContent=`Confirmación enviada a ${usuarioEmail}`;
+  } else {
+    document.getElementById('email-badge-combo').style.display='none';
+    document.getElementById('app-promo-combo').innerHTML=appPromoHTML();
+  }
+  go(5);
+}
+
+// ── PRESUPUESTO ─────────────────────────────────────────────
+function togglePref(el,pref){
+  if(pref==='cafeine'&&prefs.has('nocafeine'))prefs.delete('nocafeine');
+  if(pref==='nocafeine'&&prefs.has('cafeine'))prefs.delete('cafeine');
+  if(pref==='food'&&prefs.has('onlydrink'))prefs.delete('onlydrink');
+  if(pref==='onlydrink'&&prefs.has('food'))prefs.delete('food');
+  if(prefs.has(pref))prefs.delete(pref);else prefs.add(pref);
+  document.querySelectorAll('.pref-btn').forEach(b=>b.classList.toggle('active',prefs.has(b.dataset.pref)));
+}
+function updateBudget(v){presupuesto=parseInt(v)*1000;document.getElementById('bdisplay').textContent=fmt(presupuesto);}
+
+// ── MOTOR IA ────────────────────────────────────────────────
+function armarComboIA(budget,prefSet){
+  let bF=BEBIDAS.filter(b=>{
+    const wC=prefSet.has('cafeine'),wN=prefSet.has('nocafeine'),wCold=prefSet.has('cold'),wHot=prefSet.has('hot');
+    const okC=(!wC&&!wN)||(wC&&b.tags.includes('cafeine'))||(wN&&b.tags.includes('nocafeine'));
+    const okT=(!wCold&&!wHot)||(wCold&&b.tags.includes('cold'))||(wHot&&b.tags.includes('hot'));
+    return okC&&okT&&b.price<=budget;
+  });
+  if(bF.length===0)bF=BEBIDAS.filter(b=>b.price<=budget);
+  if(bF.length===0)return null;
+  const wF=prefSet.has('food')&&!prefSet.has('onlydrink');
+  const beb=bF.sort((a,b)=>b.price-a.price)[0];
+  let items=[beb],total=beb.price;
+  if(wF){const r=budget-total;const sols=SOLIDOS.filter(s=>s.price<=r).sort((a,b)=>b.price-a.price);
+    if(sols.length>0){items.push(sols[0]);total+=sols[0].price;const r2=budget-total;
+      if(r2>=8000){const ex=SOLIDOS.filter(s=>s.price<=r2&&s.name!==sols[0].name).sort((a,b)=>b.price-a.price)[0];if(ex){items.push(ex);total+=ex.price;}}}}
+  return{items,total,vuelto:budget-total};
+}
+function generarAlternativas(budget,prefSet,mainItems){
+  const alts=[];
+  const bp=BEBIDAS.filter(b=>b.price<=budget).sort((a,b)=>b.price-a.price);
+  if(bp[0]&&!mainItems.find(i=>i.name===bp[0].name))alts.push({label:'Solo bebida premium',items:[bp[0]],total:bp[0].price});
+  const beb=BEBIDAS.filter(b=>b.price<=budget*0.5).sort((a,b)=>b.price-a.price)[0];
+  if(beb){const r=budget-beb.price;const s1=SOLIDOS.filter(s=>s.price<=r).sort((a,b)=>b.price-a.price)[0];
+    if(s1){const r2=r-s1.price;const s2=SOLIDOS.filter(s=>s.price<=r2&&s.name!==s1.name).sort((a,b)=>b.price-a.price)[0];
+      if(s2)alts.push({label:'Doble sólido + bebida',items:[beb,s1,s2],total:beb.price+s1.price+s2.price});}}
+  return alts.slice(0,2);
+}
+function razonIA(items,budget,prefSet){
+  const beb=items[0],sols=items.slice(1);
+  const wCold=prefSet.has('cold'),wHot=prefSet.has('hot');
+  let txt=`Elegí ${beb.name} como bebida principal, `;
+  if(wCold&&beb.tags.includes('cold'))txt+='fresca y refrescante. ';
+  else if(wHot&&beb.tags.includes('hot'))txt+='calientita y reconfortante. ';
+  else txt+='dentro de tus preferencias. ';
+  if(sols.length>0)txt+=`La combiné con ${sols.map(s=>s.name).join(' y ')} para aprovechar al máximo tu presupuesto.`;
+  else txt+='Es la opción más premium en bebida con tu presupuesto.';
+  return txt;
+}
+function renderIAResult(resultado,alts){
+  const el=document.getElementById('ia-result');
+  el.innerHTML=`<div class="ia-badge"><i class="ti ti-sparkles"></i> Armado por cafeIA</div><div class="ia-combo-title">Tu combo personalizado</div><div class="ia-items">${resultado.items.map(item=>`<div class="ia-item"><div class="ia-item-left"><span class="ia-item-icon">${item.icon}</span><span>${item.name}</span></div><span class="ia-item-price">${fmt(item.price)}</span></div>`).join('')}</div><hr class="ia-divider"><div class="ia-total-row"><span class="ia-total-label">Total</span><span class="ia-total-price">${fmt(resultado.total)}</span></div>${resultado.vuelto>0?`<div class="ia-vuelto">Ahorrás ${fmt(resultado.vuelto)} de tu presupuesto</div>`:''}`;
+  document.getElementById('ia-razon').innerHTML=`<div class="ia-razon-label"><i class="ti ti-sparkles"></i> ¿Por qué esto?</div>${razonIA(resultado.items,presupuesto,prefs)}`;
+  const altsEl=document.getElementById('ia-alts');altsEl.innerHTML='';
+  alts.forEach(alt=>{
+    const div=document.createElement('div');div.className='alt-card';
+    div.innerHTML=`<div style="width:100%"><div class="alt-top"><div class="alt-name">${alt.label}</div><div class="alt-price">${fmt(alt.total)}</div></div><div class="alt-items">${alt.items.map(i=>i.name).join(' + ')}</div></div>`;
+    div.onclick=()=>{iaResult=alt;renderIAResult({items:alt.items,total:alt.total,vuelto:presupuesto-alt.total},alts.filter(a=>a.label!==alt.label));};
+    altsEl.appendChild(div);
+  });
+}
+function goIA(){
+  go(7);
+  const msgs=['Analizando tus preferencias...','Revisando el menú disponible...','Armando la combinación perfecta...','¡Casi listo!'];
+  let i=0;const iv=setInterval(()=>{if(i<msgs.length)document.getElementById('loading-text').textContent=msgs[i++];},600);
+  setTimeout(()=>{clearInterval(iv);const res=armarComboIA(presupuesto,prefs);if(!res){go(6);return;}
+    iaResult={items:res.items,total:res.total,vuelto:res.vuelto};iaAlts=generarAlternativas(presupuesto,prefs,res.items);renderIAResult(iaResult,iaAlts);go(8);},2500);
+}
+function confirmarIA(){
+  ordenCount++;
+  const card=document.getElementById('ia-confirm-card');
+  card.innerHTML=iaResult.items.map(i=>`<div class="confirm-row"><span>${i.name}</span><span class="confirm-price">${fmt(i.price)}</span></div>`).join('')+`<div class="confirm-row total"><span>Total</span><span class="confirm-price total-price">${fmt(iaResult.total)}</span></div>`;
+  // Correo si tiene cuenta
+  if(!esInvitado && usuarioEmail){
+    const desc = iaResult.items.map(i=>i.name).join(' + ');
+    sendPedido(usuarioNombre, usuarioEmail, 'Combo IA personalizado', desc, fmt(iaResult.total));
+    document.getElementById('email-badge-ia').style.display='flex';
+    document.getElementById('email-badge-ia-text').textContent=`Confirmación enviada a ${usuarioEmail}`;
+  } else {
+    document.getElementById('email-badge-ia').style.display='none';
+    document.getElementById('app-promo-ia').innerHTML=appPromoHTML();
+  }
+  go(9);
+}
+
+function appPromoHTML(){return`<div class="app-promo"><div class="app-promo-title"><i class="ti ti-device-mobile" style="font-size:16px;color:var(--tost)"></i> Descargá la app cafeIA</div><div class="app-promo-sub">Creá tu cuenta y la IA mejora con cada pedido.</div><div class="app-promo-feats"><div class="app-feat"><i class="ti ti-brain"></i> Aprende tus gustos</div><div class="app-feat"><i class="ti ti-star"></i> Acumulás puntos</div><div class="app-feat"><i class="ti ti-bell"></i> Ofertas personalizadas</div></div><button class="app-download-btn"><i class="ti ti-download" style="font-size:18px"></i> Descargar cafeIA</button></div>`;}
+
+function setLang(l){
+  document.getElementById('lb-es').classList.toggle('active',l==='es');
+  document.getElementById('lb-en').classList.toggle('active',l==='en');
+}
+
+function goBack(){go(esInvitado?3:2);}
+
+function go(n){
+  if(n===3)esInvitado=true;
+  if(n===4)renderCombos();
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+}
+
+renderCombos();updateBudget(40);
+</script>
+</body>
+</html>
